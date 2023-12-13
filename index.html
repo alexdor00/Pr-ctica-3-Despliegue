@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- ... tus otros elementos del head ... -->
+    <title>Nombre del Usuario</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+
+<div id="userNameContainer">
+    <h2>Nombre del Usuario</h2>
+    <form id="addUserNameForm">
+        <label for="userName">Nombre de Usuario:</label>
+        <input type="text" id="userName" name="userName" required>
+        <button type="submit">Agregar Nombre</button>
+    </form>
+    <div id="result"></div>
+</div>
+
+<script>
+    document.getElementById('addUserNameForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const userName = document.getElementById('userName').value;
+        fetch('/names', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: userName }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = `Nombre agregado: ${data.name}`;
+                // Limpiar el campo de entrada
+                document.getElementById('userName').value = '';
+            })
+            .catch(error => console.error('Error:', error));
+    });
+</script>
+
+</body>
+</html>

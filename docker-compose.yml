@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - shared-data:/path/to/shared/folder
+    depends_on:
+      - mongodb
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - web-data:/usr/share/nginx/html
+    depends_on:
+      - api
+
+  mongodb:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+    volumes:
+      - mongo-data:/data/db
+      - shared-data:/path/to/shared/folder
+
+volumes:
+  mongo-data:
+  shared-data:
+  web-data:
